@@ -3,390 +3,379 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🧬 Biology Quiz Game</title>
+<title>เกมชีววิทยา 10 ข้อ</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Tahoma,sans-serif;
-}
-
 body{
-background:linear-gradient(135deg,#6c63ff,#4caf50);
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#4caf50,#81c784);
+    margin:0;
+    padding:20px;
 }
 
-.card{
-background:white;
-width:100%;
-max-width:700px;
-padding:25px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.2);
+.container{
+    max-width:800px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,.2);
 }
 
 h1{
-text-align:center;
-color:#6c63ff;
-margin-bottom:20px;
+    text-align:center;
+    color:#2e7d32;
 }
 
-select,button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:1px solid #ccc;
-font-size:16px;
+#levelSelect{
+    width:100%;
+    padding:10px;
+    font-size:18px;
 }
 
 button{
-background:#6c63ff;
-color:white;
-border:none;
-cursor:pointer;
+    padding:10px 20px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#2e7d32;
+    color:white;
+    font-size:16px;
 }
 
 button:hover{
-background:#574bdb;
+    background:#1b5e20;
 }
 
-.option{
-background:#f5f5f5;
-padding:12px;
-margin:10px 0;
-border-radius:10px;
-cursor:pointer;
+.choice{
+    display:block;
+    width:100%;
+    margin:8px 0;
+    text-align:left;
 }
 
-.option:hover{
-background:#dfe6ff;
-}
-
-.correct{
-background:#b8ffb8 !important;
-}
-
-.wrong{
-background:#ffb8b8 !important;
+#result{
+    margin-top:15px;
+    font-weight:bold;
+    font-size:18px;
 }
 
 .hidden{
-display:none;
-}
-
-#progress{
-margin-bottom:15px;
-font-weight:bold;
-}
-
-#score{
-font-size:22px;
-text-align:center;
-color:#4caf50;
-margin-top:20px;
+    display:none;
 }
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="container">
 
-<div id="lobby">
+<h1>🧬 เกมชีววิทยา 10 ข้อ</h1>
 
-<h1>🧬 Biology Quiz</h1>
-
-<label>หมวดหมู่</label>
-<select id="category">
-<option value="reproduction">การสืบพันธุ์ของพืชดอก</option>
-<option value="growth">โครงสร้างและการเจริญเติบโตของพืชดอก</option>
-<option value="genetics">โครโมโซมและสารพันธุกรรม</option>
-<option value="inheritance">การถ่ายทอดลักษณะทางพันธุกรรม</option>
+<label>เลือกระดับความยาก</label>
+<select id="levelSelect">
+    <option value="easy">ง่าย</option>
+    <option value="medium">ปานกลาง</option>
+    <option value="hard">ยาก</option>
+    <option value="veryhard">ยากมาก</option>
 </select>
 
-<label>ระดับ</label>
-<select id="difficulty">
-<option value="easy">ง่าย</option>
-<option value="medium">ปานกลาง</option>
-<option value="hard">ยาก</option>
-<option value="expert">ยากมาก</option>
-</select>
+<br>
+<button onclick="startGame()">เริ่มเกมใหม่</button>
 
-<button onclick="startQuiz()">
-เริ่มเกม
-</button>
+<div id="gameArea" class="hidden">
+    <h2 id="questionNumber"></h2>
+    <p id="questionText"></p>
 
-</div>
+    <div id="choices"></div>
 
-<div id="quiz" class="hidden">
-
-<div id="progress"></div>
-
-<h2 id="question"></h2>
-
-<div id="answers"></div>
-
-<p id="feedback"></p>
-
-<button id="nextBtn"
-class="hidden"
-onclick="nextQuestion()">
-ข้อถัดไป
-</button>
-
-</div>
-
-<div id="result" class="hidden">
-<h1>🎉 จบเกม</h1>
-<div id="score"></div>
-<button onclick="location.reload()">
-เล่นใหม่
-</button>
+    <p id="result"></p>
 </div>
 
 </div>
 
 <script>
 
-const quizData = {
+const questions = {
 
-reproduction:{
 easy:[
 {
-q:"ส่วนใดสร้างละอองเรณู",
-a:["เกสรตัวผู้","รังไข่","กลีบดอก","ออวุล"],
-correct:0
+q:"หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?",
+c:["เซลล์","เนื้อเยื่อ","อวัยวะ","ระบบอวัยวะ"],
+a:0
 },
 {
-q:"การผสมเกสรคืออะไร",
-a:["ถ่ายละอองเรณู","สร้างเมล็ด","สร้างผล","งอก"],
-correct:0
-}
-]
+q:"พืชสร้างอาหารด้วยกระบวนการใด?",
+c:["หายใจ","สังเคราะห์ด้วยแสง","ย่อยอาหาร","คายน้ำ"],
+a:1
 },
+{
+q:"เลือดมีสีแดงเนื่องจากสารใด?",
+c:["คลอโรฟิลล์","ฮีโมโกลบิน","ไมโอโกลบิน","อินซูลิน"],
+a:1
+},
+{
+q:"มนุษย์มีหัวใจกี่ห้อง?",
+c:["2","3","4","5"],
+a:2
+},
+{
+q:"DNA ย่อมาจากอะไร?",
+c:["Deoxyribonucleic Acid","Dynamic Nucleus Acid","Dual Nerve Acid","None"],
+a:0
+},
+{
+q:"สัตว์เลี้ยงลูกด้วยนมมีลักษณะเด่นคืออะไร?",
+c:["มีขนและให้นมลูก","วางไข่","หายใจทางเหงือก","ไม่มีโครงกระดูก"],
+a:0
+},
+{
+q:"อวัยวะใดทำหน้าที่สูบฉีดเลือด?",
+c:["ปอด","ตับ","หัวใจ","ไต"],
+a:2
+},
+{
+q:"ส่วนใดของพืชดูดน้ำ?",
+c:["ใบ","ดอก","ราก","ลำต้น"],
+a:2
+},
+{
+q:"แก๊สที่พืชใช้ในการสังเคราะห์ด้วยแสงคือ?",
+c:["ออกซิเจน","คาร์บอนไดออกไซด์","ไนโตรเจน","ไฮโดรเจน"],
+a:1
+},
+{
+q:"มนุษย์มีโครโมโซมทั้งหมดกี่คู่?",
+c:["21","22","23","24"],
+a:2
+}
+],
 
-growth:{
-easy:[
+medium:[
 {
-q:"รากมีหน้าที่อะไร",
-a:["ดูดน้ำ","สังเคราะห์แสง","สร้างเมล็ด","สร้างดอก"],
-correct:0
+q:"ไมโทคอนเดรียทำหน้าที่อะไร?",
+c:["สร้างพลังงาน","สร้างโปรตีน","เก็บน้ำ","สังเคราะห์แสง"],
+a:0
 },
 {
-q:"ใบมีหน้าที่หลักคือ",
-a:["สังเคราะห์แสง","ดูดน้ำ","สร้างราก","สร้างผล"],
-correct:0
+q:"กรุ๊ปเลือด ABO ควบคุมโดยยีนกี่อัลลีล?",
+c:["2","3","4","5"],
+a:1
+},
+{
+q:"การแบ่งเซลล์แบบไมโอซิสให้เซลล์ลูกกี่เซลล์?",
+c:["2","4","6","8"],
+a:1
+},
+{
+q:"เอนไซม์เป็นสารประเภทใด?",
+c:["ไขมัน","โปรตีน","คาร์โบไฮเดรต","วิตามิน"],
+a:1
+},
+{
+q:"ฮอร์โมนอินซูลินสร้างจากอวัยวะใด?",
+c:["ตับ","ตับอ่อน","ไต","หัวใจ"],
+a:1
+},
+{
+q:"RNA มีน้ำตาลชนิดใด?",
+c:["ไรโบส","ดีออกซีไรโบส","กลูโคส","ฟรักโทส"],
+a:0
+},
+{
+q:"หน่วยย่อยของโปรตีนคืออะไร?",
+c:["กรดอะมิโน","กลูโคส","กรดไขมัน","นิวคลีโอไทด์"],
+a:0
+},
+{
+q:"การถ่ายทอดลักษณะทางพันธุกรรมศึกษาครั้งแรกโดยใคร?",
+c:["ดาร์วิน","เมนเดล","วัตสัน","ลามาร์ก"],
+a:1
+},
+{
+q:"ส่วนใดของเซลล์ควบคุมการทำงาน?",
+c:["นิวเคลียส","ไรโบโซม","กอลจิบอดี","แวคิวโอล"],
+a:0
+},
+{
+q:"พืชเก็บแป้งไว้ในรูปใด?",
+c:["เซลลูโลส","ไกลโคเจน","สตาร์ช","ไคติน"],
+a:2
 }
-]
-},
+],
 
-genetics:{
-easy:[
+hard:[
 {
-q:"DNA ย่อมาจากอะไร",
-a:[
-"Deoxyribonucleic Acid",
-"Ribonucleic Acid",
-"ATP",
-"Protein"
-],
-correct:0
+q:"โครโมโซมมนุษย์มีทั้งหมดกี่แท่ง?",
+c:["23","44","46","48"],
+a:2
 },
 {
-q:"โครโมโซมอยู่ในส่วนใด",
-a:[
-"นิวเคลียส",
-"ผนังเซลล์",
-"ไซโทพลาซึม",
-"เยื่อหุ้มเซลล์"
-],
-correct:0
+q:"กระบวนการสร้าง RNA จาก DNA เรียกว่า?",
+c:["Translation","Replication","Transcription","Mutation"],
+a:2
+},
+{
+q:"Codon หนึ่งชุดประกอบด้วยกี่นิวคลีโอไทด์?",
+c:["2","3","4","5"],
+a:1
+},
+{
+q:"สัตว์ชนิดใดมีระบบหมุนเวียนเลือดแบบเปิด?",
+c:["ปลา","กบ","แมลง","นก"],
+a:2
+},
+{
+q:"การคัดเลือกโดยธรรมชาติเป็นแนวคิดของใคร?",
+c:["เมนเดล","ดาร์วิน","วัตสัน","ฮุก"],
+a:1
+},
+{
+q:"ข้อใดเป็นออร์แกเนลล์ที่ไม่มีเยื่อหุ้ม?",
+c:["ไมโทคอนเดรีย","นิวเคลียส","ไรโบโซม","คลอโรพลาสต์"],
+a:2
+},
+{
+q:"ATP ย่อมาจากอะไร?",
+c:["Adenosine Triphosphate","Amino Triphosphate","Adenine Protein","Active Transfer Protein"],
+a:0
+},
+{
+q:"พืช C4 ลดการสูญเสียจากกระบวนการใด?",
+c:["Respiration","Photorespiration","Transpiration","Fermentation"],
+a:1
+},
+{
+q:"การกลายพันธุ์ที่ไม่เปลี่ยนกรดอะมิโนเรียกว่า?",
+c:["Missense","Nonsense","Silent","Frameshift"],
+a:2
+},
+{
+q:"เซลล์ประสาทส่งสัญญาณผ่านสารใด?",
+c:["Neurotransmitter","Insulin","Hemoglobin","Starch"],
+a:0
 }
-]
-},
+],
 
-inheritance:{
-easy:[
+veryhard:[
 {
-q:"เมนเดลศึกษาพืชชนิดใด",
-a:[
-"ถั่วลันเตา",
-"ข้าว",
-"ข้าวโพด",
-"อ้อย"
-],
-correct:0
+q:"ข้อใดเป็นเอนไซม์ที่ใช้สร้างสาย DNA ใหม่?",
+c:["Ligase","Helicase","DNA Polymerase","Primase"],
+a:2
 },
 {
-q:"ลักษณะเด่นคือ",
-a:[
-"แสดงออกได้",
-"หายไป",
-"ไม่ถ่ายทอด",
-"กลายพันธุ์"
-],
-correct:0
+q:"Hardy-Weinberg equilibrium ต้องมีเงื่อนไขใด?",
+c:["มีการคัดเลือก","ประชากรใหญ่","มีการอพยพ","กลายพันธุ์สูง"],
+a:1
+},
+{
+q:"การหายใจระดับเซลล์สร้าง ATP มากที่สุดในขั้นตอนใด?",
+c:["Glycolysis","Krebs Cycle","ETC","Fermentation"],
+a:2
+},
+{
+q:"Epigenetics เกี่ยวข้องกับอะไร?",
+c:["การเปลี่ยนลำดับ DNA","การควบคุมการแสดงออกของยีน","การเพิ่มจำนวนเซลล์","การสังเคราะห์โปรตีน"],
+a:1
+},
+{
+q:"Lysosome มีหน้าที่หลักคือ?",
+c:["สร้างโปรตีน","กำจัดของเสีย","สร้าง ATP","เก็บน้ำ"],
+a:1
+},
+{
+q:"Operon model ถูกเสนอโดยใคร?",
+c:["Jacob และ Monod","Darwin","Mendel","Morgan"],
+a:0
+},
+{
+q:"พันธุศาสตร์ประชากรศึกษาการเปลี่ยนแปลงของอะไร?",
+c:["จีโนม","ความถี่ยีน","จำนวนเซลล์","ชนิดโปรตีน"],
+a:1
+},
+{
+q:"Crossing over เกิดในระยะใดของ Meiosis I?",
+c:["Prophase I","Metaphase I","Anaphase I","Telophase I"],
+a:0
+},
+{
+q:"CRISPR ใช้ทำอะไร?",
+c:["เพิ่มวิตามิน","ตัดต่อยีน","สร้าง ATP","สร้างฮอร์โมน"],
+a:1
+},
+{
+q:"ทฤษฎี Endosymbiotic อธิบายกำเนิดของอะไร?",
+c:["ไรโบโซม","ไมโทคอนเดรียและคลอโรพลาสต์","DNA","เยื่อหุ้มเซลล์"],
+a:1
 }
 ]
-}
 
 };
 
-let currentQuiz=[];
-let currentIndex=0;
-let score=0;
+let currentQuestions = [];
+let current = 0;
+let score = 0;
 
-function startQuiz(){
-
-const category =
-document.getElementById("category").value;
-
-const difficulty =
-document.getElementById("difficulty").value;
-
-if(
-!quizData[category] ||
-!quizData[category][difficulty]
-){
-alert("ยังไม่มีคำถามระดับนี้");
-return;
+function shuffle(arr){
+    return arr.sort(() => Math.random()-0.5);
 }
 
-currentQuiz =
-quizData[category][difficulty];
+function startGame(){
 
-currentIndex=0;
-score=0;
+    const level = document.getElementById("levelSelect").value;
 
-document.getElementById("lobby")
-.classList.add("hidden");
+    currentQuestions = [...questions[level]];
+    shuffle(currentQuestions);
 
-document.getElementById("quiz")
-.classList.remove("hidden");
+    current = 0;
+    score = 0;
 
-showQuestion();
+    document.getElementById("gameArea").classList.remove("hidden");
 
+    showQuestion();
 }
 
 function showQuestion(){
 
-let q =
-currentQuiz[currentIndex];
+    const q = currentQuestions[current];
 
-document.getElementById("progress")
-.innerHTML=
-`ข้อ ${currentIndex+1}
-จาก ${currentQuiz.length}`;
+    document.getElementById("questionNumber").innerText =
+        `ข้อ ${current+1} / 10`;
 
-document.getElementById("question")
-.innerHTML=q.q;
+    document.getElementById("questionText").innerText = q.q;
 
-document.getElementById("feedback")
-.innerHTML="";
+    document.getElementById("result").innerText = "";
 
-document.getElementById("nextBtn")
-.classList.add("hidden");
+    const choices = document.getElementById("choices");
+    choices.innerHTML = "";
 
-let answers=
-document.getElementById("answers");
-
-answers.innerHTML="";
-
-q.a.forEach((choice,index)=>{
-
-let div=
-document.createElement("div");
-
-div.className="option";
-
-div.innerHTML=choice;
-
-div.onclick=
-()=>checkAnswer(index);
-
-answers.appendChild(div);
-
-});
-
+    q.c.forEach((choice,index)=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.innerText = choice;
+        btn.onclick = ()=>checkAnswer(index);
+        choices.appendChild(btn);
+    });
 }
 
 function checkAnswer(index){
 
-let q=currentQuiz[currentIndex];
+    if(index === currentQuestions[current].a){
+        score++;
+    }
 
-let options=
-document.querySelectorAll(".option");
+    current++;
 
-options.forEach(op=>{
-op.style.pointerEvents="none";
-});
+    if(current < 10){
+        showQuestion();
+    }else{
+        document.getElementById("questionText").innerHTML =
+        `🎉 จบเกมแล้ว<br>คะแนนของคุณ ${score} / 10`;
 
-if(index===q.correct){
+        document.getElementById("choices").innerHTML = "";
 
-options[index]
-.classList.add("correct");
-
-score++;
-
-document.getElementById("feedback")
-.innerHTML=
-"✅ ถูกต้อง";
-
-}else{
-
-options[index]
-.classList.add("wrong");
-
-options[q.correct]
-.classList.add("correct");
-
-document.getElementById("feedback")
-.innerHTML=
-"❌ คำตอบที่ถูกคือ : "
-+ q.a[q.correct];
-
-}
-
-document.getElementById("nextBtn")
-.classList.remove("hidden");
-
-}
-
-function nextQuestion(){
-
-currentIndex++;
-
-if(currentIndex<currentQuiz.length){
-
-showQuestion();
-
-}else{
-
-finishQuiz();
-
-}
-
-}
-
-function finishQuiz(){
-
-document.getElementById("quiz")
-.classList.add("hidden");
-
-document.getElementById("result")
-.classList.remove("hidden");
-
-document.getElementById("score")
-.innerHTML=
-`คะแนน ${score}
-จาก ${currentQuiz.length}`;
-
+        document.getElementById("questionNumber").innerHTML = "";
+    }
 }
 
 </script>
