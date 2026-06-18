@@ -1,10 +1,141 @@
-<html>
+<!DOCTYPE html>
+<html lang="th">
 <head>
-  <title>
-    ศิริรรณ พันธ์จันทร์ดี
-  </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมชีววิทยา Quiz</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #4CAF50, #81C784);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .game-box {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        width: 400px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    h1 {
+        color: #2E7D32;
+    }
+
+    .question {
+        font-size: 20px;
+        margin: 20px 0;
+    }
+
+    button {
+        width: 100%;
+        margin: 8px 0;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #4CAF50;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #388E3C;
+    }
+
+    #result {
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+</style>
 </head>
-  <body>
-    Hello world
-  </body>
+<body>
+
+<div class="game-box">
+    <h1>🧬 เกมชีววิทยา</h1>
+
+    <div id="question" class="question"></div>
+
+    <div id="answers"></div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+const questions = [
+{
+    question: "หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?",
+    answers: ["เซลล์", "เนื้อเยื่อ", "อวัยวะ", "DNA"],
+    correct: 0
+},
+{
+    question: "พืชสร้างอาหารด้วยกระบวนการใด?",
+    answers: ["การหายใจ", "การย่อยอาหาร", "การสังเคราะห์แสง", "การสืบพันธุ์"],
+    correct: 2
+},
+{
+    question: "DNA ย่อมาจากอะไร?",
+    answers: [
+        "Deoxyribonucleic Acid",
+        "Dynamic Nucleus Acid",
+        "Double Nature Acid",
+        "Digital Network Array"
+    ],
+    correct: 0
+}
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    const q = questions[current];
+
+    document.getElementById("question").textContent = q.question;
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    q.answers.forEach((answer, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(index);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected) {
+    if (selected === questions[current].correct) {
+        score++;
+    }
+
+    current++;
+
+    if (current < questions.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("question").textContent = "จบเกม!";
+    document.getElementById("answers").innerHTML = "";
+
+    document.getElementById("result").innerHTML =
+        `คุณได้ ${score} / ${questions.length} คะแนน 🏆`;
+}
+
+loadQuestion();
+</script>
+
+</body>
 </html>
