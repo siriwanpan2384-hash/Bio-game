@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>เกมชีววิทยา ม.5</title>
+<title>Biology Quiz Game</title>
 
 <style>
 body{
@@ -16,10 +17,10 @@ body{
 .container{
     max-width:800px;
     margin:auto;
-    background:white;
+    background:#fff;
     padding:20px;
     border-radius:15px;
-    box-shadow:0 0 10px rgba(0,0,0,.2);
+    box-shadow:0 0 15px rgba(0,0,0,.15);
 }
 
 h1{
@@ -27,31 +28,44 @@ h1{
     color:#2e7d32;
 }
 
-button{
+label{
+    font-weight:bold;
+}
+
+select,button{
     width:100%;
     padding:12px;
-    margin:5px 0;
-    border:none;
+    margin-top:8px;
+    margin-bottom:15px;
     border-radius:8px;
-    background:#4caf50;
+}
+
+button{
+    border:none;
+    background:#43a047;
     color:white;
     cursor:pointer;
 }
 
 button:hover{
-    background:#388e3c;
+    background:#2e7d32;
 }
 
-#question{
-    font-size:20px;
-    margin:20px 0;
+.answer{
+    margin-top:10px;
 }
 
 .info{
-    margin-bottom:15px;
     font-weight:bold;
+    margin-bottom:10px;
+}
+
+#question{
+    font-size:22px;
+    margin:20px 0;
 }
 </style>
+
 </head>
 <body>
 
@@ -61,32 +75,32 @@ button:hover{
 
 <div id="menu">
 
-<h3>เลือกหมวดหมู่</h3>
+<label>เลือกระดับ</label> <select id="level">
 
-<select id="category">
-<option value="reproduction">การสืบพันธุ์ของพืชดอก</option>
-<option value="growth">โครงสร้างและการเจริญเติบโตของพืชดอก</option>
-<option value="chromosome">โครโมโซมและสารพันธุกรรม</option>
-<option value="genetics">การถ่ายทอดลักษณะทางพันธุกรรม</option>
-</select>
-
-<h3>เลือกระดับ</h3>
-
-<select id="level">
 <option value="easy">ง่าย</option>
 <option value="medium">ปานกลาง</option>
 <option value="hard">ยาก</option>
 <option value="veryhard">ยากมาก</option>
 </select>
 
-<button onclick="startGame()">เริ่มเกม</button>
+<label>เลือกหมวดหมู่</label> <select id="category">
+
+<option value="flower">1. การสืบพันธุ์ของพืชดอก</option>
+<option value="growth">2. โครงสร้างและการเจริญเติบโตของพืชดอก</option>
+<option value="chromosome">3. โครโมโซมและสารพันธุกรรม</option>
+<option value="genetic">4. การถ่ายทอดลักษณะทางพันธุกรรม</option>
+</select>
+
+<button onclick="startGame()">
+เริ่มเกม
+</button>
 
 </div>
 
-<div id="game" style="display:none;">
+<div id="game" style="display:none">
 
-<div class="info" id="progress"></div>
 <div class="info" id="score"></div>
+<div class="info" id="progress"></div>
 
 <div id="question"></div>
 
@@ -98,107 +112,118 @@ button:hover{
 
 <script>
 
+/* ========= ฐานข้อมูลคำถาม ========= */
+
 const questions = [
 
 {
-category:"reproduction",
+category:"flower",
 level:"easy",
-question:"ส่วนใดของดอกทำหน้าที่สร้างเซลล์สืบพันธุ์เพศผู้",
-answers:["อับเรณู","รังไข่","กลีบดอก","ฐานรองดอก"],
-correct:"อับเรณู"
+question:"เกสรตัวผู้สร้างอะไร",
+answers:["ละอองเรณู","เมล็ด","ผล","ออวุล"],
+correct:"ละอองเรณู"
 },
-
 {
-category:"reproduction",
-level:"medium",
-question:"ละอองเรณูตกบนยอดเกสรเพศเมียเรียกว่าอะไร",
-answers:["การปฏิสนธิ","การถ่ายเรณู","ไมโอซิส","การงอก"],
-correct:"การถ่ายเรณู"
+category:"flower",
+level:"easy",
+question:"ส่วนใดเป็นอวัยวะสืบพันธุ์ของพืชดอก",
+answers:["ดอก","ใบ","ราก","ลำต้น"],
+correct:"ดอก"
 },
-
+{
+category:"flower",
+level:"medium",
+question:"การถ่ายละอองเรณูเรียกว่า",
+answers:["Pollination","Mitosis","Mutation","Growth"],
+correct:"Pollination"
+},
 {
 category:"growth",
 level:"easy",
-question:"ส่วนใดของพืชทำหน้าที่ดูดน้ำ",
-answers:["ราก","ลำต้น","ใบ","ดอก"],
-correct:"ราก"
+question:"รากทำหน้าที่อะไร",
+answers:["ดูดน้ำ","สร้างเมล็ด","สืบพันธุ์","สร้างดอก"],
+correct:"ดูดน้ำ"
 },
-
+{
+category:"growth",
+level:"medium",
+question:"ไซเล็มทำหน้าที่",
+answers:["ลำเลียงน้ำ","ลำเลียงอาหาร","เก็บอาหาร","สังเคราะห์โปรตีน"],
+correct:"ลำเลียงน้ำ"
+},
 {
 category:"growth",
 level:"hard",
-question:"เนื้อเยื่อเจริญที่ปลายรากเรียกว่า",
-answers:[
-"Apical Meristem",
-"Lateral Meristem",
-"Cambium",
-"Phloem"
-],
-correct:"Apical Meristem"
+question:"ฮอร์โมนที่กระตุ้นการยืดตัวของเซลล์",
+answers:["Auxin","ABA","Ethylene","GA ต่ำ"],
+correct:"Auxin"
 },
-
 {
 category:"chromosome",
 level:"easy",
-question:"DNA อยู่ที่ใดของเซลล์",
-answers:[
-"นิวเคลียส",
-"ไรโบโซม",
-"ไมโทคอนเดรีย",
-"กอลจิ"
-],
+question:"DNA อยู่ในส่วนใดของเซลล์",
+answers:["นิวเคลียส","ไรโบโซม","กอลจิ","แวคิวโอล"],
 correct:"นิวเคลียส"
 },
-
+{
+category:"chromosome",
+level:"medium",
+question:"DNA ย่อมาจากอะไร",
+answers:[
+"Deoxyribonucleic Acid",
+"Double Acid",
+"Dynamic Acid",
+"Dual RNA"
+],
+correct:"Deoxyribonucleic Acid"
+},
+{
+category:"chromosome",
+level:"hard",
+question:"มนุษย์มีโครโมโซมกี่คู่",
+answers:["23","22","24","46"],
+correct:"23"
+},
 {
 category:"chromosome",
 level:"veryhard",
-question:"DNA ประกอบด้วยสายพอลินิวคลีโอไทด์กี่สาย",
-answers:["1","2","3","4"],
-correct:"2"
+question:"DNA จำลองตัวในระยะใด",
+answers:["Interphase","Prophase","Metaphase","Anaphase"],
+correct:"Interphase"
 },
-
 {
-category:"genetics",
+category:"genetic",
 level:"easy",
-question:"เมนเดลได้รับการยกย่องว่าเป็นบิดาแห่งวิชาพันธุศาสตร์",
-answers:["ถูก","ผิด"],
-correct:"ถูก"
+question:"เมนเดลศึกษาพืชชนิดใด",
+answers:["ถั่วลันเตา","ข้าว","ข้าวโพด","ถั่วเหลือง"],
+correct:"ถั่วลันเตา"
 },
-
 {
-category:"genetics",
+category:"genetic",
 level:"medium",
-question:"ลักษณะที่ปรากฏออกมาจริงเรียกว่า",
+question:"TT เรียกว่า",
 answers:[
-"Genotype",
+"Homozygous",
+"Heterozygous",
 "Phenotype",
-"Allele",
-"Locus"
+"Allele"
 ],
-correct:"Phenotype"
+correct:"Homozygous"
 },
-
 {
-category:"genetics",
+category:"genetic",
 level:"hard",
-question:"Tt × Tt มีโอกาสได้ tt เท่าใด",
-answers:[
-"25%",
-"50%",
-"75%",
-"100%"
-],
+question:"Tt × Tt ได้ tt เท่าใด",
+answers:["25%","50%","75%","100%"],
 correct:"25%"
 },
-
 {
-category:"genetics",
+category:"genetic",
 level:"veryhard",
-question:"กฎการแยกตัวของยีนถูกเสนอโดยใคร",
+question:"กฎการแยกตัวของยีนเสนอโดยใคร",
 answers:[
-"Darwin",
 "Mendel",
+"Darwin",
 "Watson",
 "Crick"
 ],
@@ -207,79 +232,85 @@ correct:"Mendel"
 
 ];
 
-let currentQuestions=[];
-let current=0;
-let score=0;
+/* =============================== */
 
-function shuffle(arr){
-return arr.sort(()=>Math.random()-0.5);
+let quiz = [];
+let current = 0;
+let score = 0;
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=[array[j],array[i]];
+
+}
+
+return array;
 }
 
 function startGame(){
 
-const category =
-document.getElementById("category").value;
-
 const level =
 document.getElementById("level").value;
 
-currentQuestions =
+const category =
+document.getElementById("category").value;
+
+let pool =
 questions.filter(q =>
-q.category===category &&
-q.level===level
-);
-
-currentQuestions =
-shuffle([...currentQuestions]);
-
-while(currentQuestions.length < 10){
-
-let extra =
-shuffle(
-questions.filter(q =>
+q.level===level &&
 q.category===category
-)
 );
 
-currentQuestions.push(...extra);
+if(pool.length===0){
 
+alert("ยังไม่มีคำถามระดับนี้");
+
+return;
 }
 
-currentQuestions =
-currentQuestions.slice(0,10);
+quiz = shuffle([...pool]);
 
-score=0;
-current=0;
+if(quiz.length > 10){
+quiz = quiz.slice(0,10);
+}
+
+current = 0;
+score = 0;
 
 document.getElementById("menu").style.display="none";
 document.getElementById("game").style.display="block";
 
 showQuestion();
-
 }
 
 function showQuestion(){
 
-let q=currentQuestions[current];
-
-document.getElementById("progress").innerHTML =
-"ข้อ "+(current+1)+" / 10";
+const q = quiz[current];
 
 document.getElementById("score").innerHTML =
-"คะแนน : "+score;
+"คะแนน : " + score;
+
+document.getElementById("progress").innerHTML =
+"ข้อ " + (current+1) + " / " + quiz.length;
 
 document.getElementById("question").innerHTML =
 q.question;
 
-let choices = shuffle([...q.answers]);
+let answers =
+shuffle([...q.answers]);
 
-let html="";
+let html = "";
 
-choices.forEach(choice=>{
+answers.forEach(ans=>{
 
 html += `
-<button onclick="checkAnswer('${choice}')">
-${choice}
+<button class="answer"
+onclick="checkAnswer('${ans}')">
+${ans}
 </button>
 `;
 
@@ -287,39 +318,56 @@ ${choice}
 
 document.getElementById("answers").innerHTML =
 html;
-
 }
 
 function checkAnswer(answer){
 
-if(answer===currentQuestions[current].correct){
+if(answer===quiz[current].correct){
 score++;
 }
 
 current++;
 
-if(current<10){
+if(current < quiz.length){
 showQuestion();
 }
 else{
+finishGame();
+}
 
-document.getElementById("question").innerHTML=
-`🎉 จบเกม<br><br>ได้คะแนน ${score}/10`;
+}
 
-document.getElementById("answers").innerHTML=
+function finishGame(){
+
+let percent =
+Math.round(score/quiz.length*100);
+
+document.getElementById("question").innerHTML =
+
 `
-<button onclick="location.reload()">
-เล่นใหม่
+<h2>🎉 จบเกม</h2>
+<p>คะแนน ${score}/${quiz.length}</p>
+<p>${percent}%</p>
+`;
+
+document.getElementById("answers").innerHTML =
+
+`
+<button onclick="restartGame()">
+🔄 เล่นใหม่
 </button>
 `;
 
-document.getElementById("progress").innerHTML="";
 document.getElementById("score").innerHTML="";
-
+document.getElementById("progress").innerHTML="";
 }
 
-}
+function restartGame(){
 
+document.getElementById("menu").style.display="block";
+document.getElementById("game").style.display="none";
+
+}
 </script>
 
 </body>
