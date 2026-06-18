@@ -2,13 +2,13 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เกมชีววิทยา 10 ข้อ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เกมชีววิทยา ม.5</title>
 
 <style>
 body{
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#4CAF50,#81C784);
+    font-family:Tahoma,sans-serif;
+    background:#e8f5e9;
     margin:0;
     padding:20px;
 }
@@ -17,9 +17,9 @@ body{
     max-width:800px;
     margin:auto;
     background:white;
-    padding:25px;
+    padding:20px;
     border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    box-shadow:0 0 10px rgba(0,0,0,.2);
 }
 
 h1{
@@ -27,48 +27,29 @@ h1{
     color:#2e7d32;
 }
 
-.level-btn{
-    padding:12px 18px;
-    margin:5px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    color:white;
-}
-
-.easy{background:#4CAF50;}
-.medium{background:#FF9800;}
-.hard{background:#F44336;}
-.expert{background:#6A1B9A;}
-
-.answer{
-    display:block;
+button{
     width:100%;
-    margin:10px 0;
     padding:12px;
+    margin:5px 0;
     border:none;
     border-radius:8px;
-    background:#f0f0f0;
+    background:#4caf50;
+    color:white;
     cursor:pointer;
-    font-size:16px;
 }
 
-.answer:hover{
-    background:#dcedc8;
+button:hover{
+    background:#388e3c;
 }
 
-.hidden{
-    display:none;
+#question{
+    font-size:20px;
+    margin:20px 0;
 }
 
-#result{
-    text-align:center;
-}
-
-.score{
-    font-size:24px;
-    color:#2e7d32;
+.info{
+    margin-bottom:15px;
+    font-weight:bold;
 }
 </style>
 </head>
@@ -76,324 +57,269 @@ h1{
 
 <div class="container">
 
-<h1>🧬 เกมตอบคำถามชีววิทยา</h1>
+<h1>🧬 เกมชีววิทยา</h1>
 
 <div id="menu">
-    <h3>เลือกระดับความยาก</h3>
 
-    <button class="level-btn easy" onclick="startGame('easy')">ง่าย</button>
-    <button class="level-btn medium" onclick="startGame('medium')">ปานกลาง</button>
-    <button class="level-btn hard" onclick="startGame('hard')">ยาก</button>
-    <button class="level-btn expert" onclick="startGame('expert')">ยากมาก</button>
+<h3>เลือกหมวดหมู่</h3>
+
+<select id="category">
+<option value="reproduction">การสืบพันธุ์ของพืชดอก</option>
+<option value="growth">โครงสร้างและการเจริญเติบโตของพืชดอก</option>
+<option value="chromosome">โครโมโซมและสารพันธุกรรม</option>
+<option value="genetics">การถ่ายทอดลักษณะทางพันธุกรรม</option>
+</select>
+
+<h3>เลือกระดับ</h3>
+
+<select id="level">
+<option value="easy">ง่าย</option>
+<option value="medium">ปานกลาง</option>
+<option value="hard">ยาก</option>
+<option value="veryhard">ยากมาก</option>
+</select>
+
+<button onclick="startGame()">เริ่มเกม</button>
+
 </div>
 
-<div id="quiz" class="hidden">
-    <h3 id="progress"></h3>
-    <h2 id="question"></h2>
+<div id="game" style="display:none;">
 
-    <div id="answers"></div>
-</div>
+<div class="info" id="progress"></div>
+<div class="info" id="score"></div>
 
-<div id="result" class="hidden">
-    <h2>จบเกม 🎉</h2>
-    <p class="score" id="scoreText"></p>
-    <button onclick="restart()">เล่นใหม่</button>
+<div id="question"></div>
+
+<div id="answers"></div>
+
 </div>
 
 </div>
 
 <script>
 
-const questions = {
+const questions = [
 
-easy:[
 {
-q:"หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร",
-a:["เซลล์","เนื้อเยื่อ","อวัยวะ","ระบบอวัยวะ"],
-c:0
+category:"reproduction",
+level:"easy",
+question:"ส่วนใดของดอกทำหน้าที่สร้างเซลล์สืบพันธุ์เพศผู้",
+answers:["อับเรณู","รังไข่","กลีบดอก","ฐานรองดอก"],
+correct:"อับเรณู"
 },
+
 {
-q:"พืชสร้างอาหารด้วยกระบวนการใด",
-a:["สังเคราะห์ด้วยแสง","หายใจ","ย่อยอาหาร","ดูดซึม"],
-c:0
+category:"reproduction",
+level:"medium",
+question:"ละอองเรณูตกบนยอดเกสรเพศเมียเรียกว่าอะไร",
+answers:["การปฏิสนธิ","การถ่ายเรณู","ไมโอซิส","การงอก"],
+correct:"การถ่ายเรณู"
 },
+
 {
-q:"อวัยวะใดทำหน้าที่สูบฉีดเลือด",
-a:["หัวใจ","ตับ","ไต","ปอด"],
-c:0
+category:"growth",
+level:"easy",
+question:"ส่วนใดของพืชทำหน้าที่ดูดน้ำ",
+answers:["ราก","ลำต้น","ใบ","ดอก"],
+correct:"ราก"
 },
+
 {
-q:"มนุษย์มีโครโมโซมกี่คู่",
-a:["23","22","24","46"],
-c:0
-},
-{
-q:"สัตว์ชนิดใดเป็นสัตว์เลี้ยงลูกด้วยนม",
-a:["โลมา","ฉลาม","หมึก","ปลาดาว"],
-c:0
-},
-{
-q:"สารสีเขียวในพืชเรียกว่าอะไร",
-a:["คลอโรฟิลล์","เฮโมโกลบิน","เมลานิน","แคโรทีน"],
-c:0
-},
-{
-q:"อวัยวะใดใช้แลกเปลี่ยนก๊าซ",
-a:["ปอด","หัวใจ","ตับ","กระเพาะ"],
-c:0
-},
-{
-q:"DNA ย่อมาจากอะไร",
-a:["Deoxyribonucleic Acid","Dynamic Nuclear Acid","Dual Nucleic Acid","Data RNA Acid"],
-c:0
-},
-{
-q:"สัตว์ครึ่งบกครึ่งน้ำตัวอย่างคือ",
-a:["กบ","ปลา","นก","งู"],
-c:0
-},
-{
-q:"พืชดูดน้ำจากดินผ่านส่วนใด",
-a:["ราก","ใบ","ดอก","ผล"],
-c:0
-}
+category:"growth",
+level:"hard",
+question:"เนื้อเยื่อเจริญที่ปลายรากเรียกว่า",
+answers:[
+"Apical Meristem",
+"Lateral Meristem",
+"Cambium",
+"Phloem"
 ],
+correct:"Apical Meristem"
+},
 
-medium:[
 {
-q:"ไมโทคอนเดรียมีหน้าที่อะไร",
-a:["สร้างพลังงาน","สร้างโปรตีน","เก็บน้ำ","สร้าง DNA"],
-c:0
-},
-{
-q:"เลือดหมู่ O สามารถให้เลือดแก่หมู่ใด",
-a:["ทุกหมู่","A เท่านั้น","B เท่านั้น","AB เท่านั้น"],
-c:0
-},
-{
-q:"กระบวนการแบ่งเซลล์เพื่อการเจริญเติบโตคือ",
-a:["ไมโทซิส","ไมโอซิส","ปฏิสนธิ","โคลนนิ่ง"],
-c:0
-},
-{
-q:"สารพันธุกรรมอยู่ในส่วนใดของเซลล์",
-a:["นิวเคลียส","เยื่อหุ้มเซลล์","ไซโทพลาซึม","ไรโบโซม"],
-c:0
-},
-{
-q:"ฮอร์โมนอินซูลินสร้างจากอวัยวะใด",
-a:["ตับอ่อน","ตับ","ไต","ม้าม"],
-c:0
-},
-{
-q:"พืชคายน้ำผ่านส่วนใด",
-a:["ปากใบ","ราก","ดอก","ผล"],
-c:0
-},
-{
-q:"เม็ดเลือดแดงทำหน้าที่",
-a:["ลำเลียงออกซิเจน","สร้างภูมิคุ้มกัน","แข็งตัวของเลือด","ย่อยอาหาร"],
-c:0
-},
-{
-q:"ส่วนใดของพืชพัฒนาเป็นผล",
-a:["รังไข่","กลีบดอก","เกสรตัวผู้","ใบ"],
-c:0
-},
-{
-q:"RNA แตกต่างจาก DNA เพราะมี",
-a:["ยูราซิล","ไทมีน","คลอโรฟิลล์","กลูโคส"],
-c:0
-},
-{
-q:"สิ่งมีชีวิตที่สร้างอาหารเองได้เรียกว่า",
-a:["ผู้ผลิต","ผู้บริโภค","ผู้ย่อยสลาย","ผู้ล่า"],
-c:0
-}
+category:"chromosome",
+level:"easy",
+question:"DNA อยู่ที่ใดของเซลล์",
+answers:[
+"นิวเคลียส",
+"ไรโบโซม",
+"ไมโทคอนเดรีย",
+"กอลจิ"
 ],
+correct:"นิวเคลียส"
+},
 
-hard:[
 {
-q:"ข้อใดเป็นระยะที่โครโมโซมเรียงตัวกลางเซลล์",
-a:["Metaphase","Prophase","Anaphase","Telophase"],
-c:0
+category:"chromosome",
+level:"veryhard",
+question:"DNA ประกอบด้วยสายพอลินิวคลีโอไทด์กี่สาย",
+answers:["1","2","3","4"],
+correct:"2"
 },
+
 {
-q:"เอนไซม์มีหน้าที่หลักอะไร",
-a:["เร่งปฏิกิริยาเคมี","เก็บพลังงาน","ลำเลียงออกซิเจน","สร้างเซลล์"],
-c:0
+category:"genetics",
+level:"easy",
+question:"เมนเดลได้รับการยกย่องว่าเป็นบิดาแห่งวิชาพันธุศาสตร์",
+answers:["ถูก","ผิด"],
+correct:"ถูก"
 },
+
 {
-q:"กฎการแยกตัวของยีนค้นพบโดยใคร",
-a:["เกรเกอร์ เมนเดล","ดาร์วิน","ลามาร์ก","วัตสัน"],
-c:0
-},
-{
-q:"หน่วยย่อยของโปรตีนคือ",
-a:["กรดอะมิโน","กรดไขมัน","น้ำตาล","นิวคลีโอไทด์"],
-c:0
-},
-{
-q:"การหายใจระดับเซลล์เกิดมากที่สุดที่",
-a:["ไมโทคอนเดรีย","ไรโบโซม","กอลจิบอดี","นิวเคลียส"],
-c:0
-},
-{
-q:"ข้อใดเป็นผู้ย่อยสลาย",
-a:["เห็ดรา","ต้นไม้","สิงโต","ปลา"],
-c:0
-},
-{
-q:"การคัดเลือกโดยธรรมชาติเป็นแนวคิดของใคร",
-a:["ดาร์วิน","เมนเดล","ปาสเตอร์","ฮุค"],
-c:0
-},
-{
-q:"สารใดเป็นองค์ประกอบหลักของผนังเซลล์พืช",
-a:["เซลลูโลส","ไคติน","โปรตีน","ไขมัน"],
-c:0
-},
-{
-q:"ABO blood group ถูกกำหนดโดย",
-a:["หลายอัลลีล","ยีนเดี่ยว","ยีนด้อย","ยีนบน Y"],
-c:0
-},
-{
-q:"ข้อใดคือการถ่ายทอดพลังงานในระบบนิเวศ",
-a:["ห่วงโซ่อาหาร","การหายใจ","การสืบพันธุ์","การคายน้ำ"],
-c:0
-}
+category:"genetics",
+level:"medium",
+question:"ลักษณะที่ปรากฏออกมาจริงเรียกว่า",
+answers:[
+"Genotype",
+"Phenotype",
+"Allele",
+"Locus"
 ],
+correct:"Phenotype"
+},
 
-expert:[
 {
-q:"เอนไซม์ DNA Polymerase มีหน้าที่",
-a:["สังเคราะห์ DNA","สังเคราะห์โปรตีน","สลายไขมัน","สร้าง ATP"],
-c:0
+category:"genetics",
+level:"hard",
+question:"Tt × Tt มีโอกาสได้ tt เท่าใด",
+answers:[
+"25%",
+"50%",
+"75%",
+"100%"
+],
+correct:"25%"
 },
-{
-q:"Hardy-Weinberg ใช้อธิบายอะไร",
-a:["สมดุลทางพันธุกรรม","การสังเคราะห์แสง","วัฏจักรน้ำ","ภูมิคุ้มกัน"],
-c:0
-},
-{
-q:"Codon หนึ่งชุดเข้ารหัสให้",
-a:["กรดอะมิโน 1 ชนิด","โปรตีน 1 ตัว","DNA 1 สาย","เซลล์ 1 เซลล์"],
-c:0
-},
-{
-q:"Calvin Cycle เกิดในส่วนใดของคลอโรพลาสต์",
-a:["สโตรมา","ไทลาคอยด์","กรานา","เยื่อหุ้ม"],
-c:0
-},
-{
-q:"การถ่ายทอดแบบ Incomplete Dominance ให้ลักษณะใด",
-a:["ลักษณะกึ่งกลาง","เด่นสมบูรณ์","ด้อยสมบูรณ์","ไม่มีการแสดงออก"],
-c:0
-},
-{
-q:"ข้อใดเป็นตัวรับอิเล็กตรอนสุดท้ายในการหายใจแบบใช้ออกซิเจน",
-a:["ออกซิเจน","คาร์บอนไดออกไซด์","NADH","กลูโคส"],
-c:0
-},
-{
-q:"Genome หมายถึงอะไร",
-a:["สารพันธุกรรมทั้งหมด","ยีนเด่น","โครโมโซมคู่ที่ 1","RNA ทั้งหมด"],
-c:0
-},
-{
-q:"PCR ใช้เพื่ออะไร",
-a:["เพิ่มจำนวน DNA","สร้างโปรตีน","สลายเซลล์","ย้อมสีเซลล์"],
-c:0
-},
-{
-q:"Lysosome มีหน้าที่",
-a:["ย่อยสลายสาร","สร้างพลังงาน","สร้างโปรตีน","สังเคราะห์แสง"],
-c:0
-},
-{
-q:"Central Dogma คือ",
-a:["DNA → RNA → Protein","RNA → DNA → Protein","Protein → DNA","DNA → Protein → RNA"],
-c:0
-}
-]
 
-};
-
-let currentQuestions = [];
-let current = 0;
-let score = 0;
-
-function shuffle(array){
-    for(let i=array.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [array[i],array[j]]=[array[j],array[i]];
-    }
+{
+category:"genetics",
+level:"veryhard",
+question:"กฎการแยกตัวของยีนถูกเสนอโดยใคร",
+answers:[
+"Darwin",
+"Mendel",
+"Watson",
+"Crick"
+],
+correct:"Mendel"
 }
 
-function startGame(level){
+];
 
-    currentQuestions=[...questions[level]];
-    shuffle(currentQuestions);
+let currentQuestions=[];
+let current=0;
+let score=0;
 
-    current=0;
-    score=0;
+function shuffle(arr){
+return arr.sort(()=>Math.random()-0.5);
+}
 
-    document.getElementById("menu").classList.add("hidden");
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("quiz").classList.remove("hidden");
+function startGame(){
 
-    showQuestion();
+const category =
+document.getElementById("category").value;
+
+const level =
+document.getElementById("level").value;
+
+currentQuestions =
+questions.filter(q =>
+q.category===category &&
+q.level===level
+);
+
+currentQuestions =
+shuffle([...currentQuestions]);
+
+while(currentQuestions.length < 10){
+
+let extra =
+shuffle(
+questions.filter(q =>
+q.category===category
+)
+);
+
+currentQuestions.push(...extra);
+
+}
+
+currentQuestions =
+currentQuestions.slice(0,10);
+
+score=0;
+current=0;
+
+document.getElementById("menu").style.display="none";
+document.getElementById("game").style.display="block";
+
+showQuestion();
+
 }
 
 function showQuestion(){
 
-    let q=currentQuestions[current];
+let q=currentQuestions[current];
 
-    document.getElementById("progress").textContent =
-        `ข้อ ${current+1} / ${currentQuestions.length}`;
+document.getElementById("progress").innerHTML =
+"ข้อ "+(current+1)+" / 10";
 
-    document.getElementById("question").textContent=q.q;
+document.getElementById("score").innerHTML =
+"คะแนน : "+score;
 
-    const answersDiv=document.getElementById("answers");
-    answersDiv.innerHTML="";
+document.getElementById("question").innerHTML =
+q.question;
 
-    q.a.forEach((ans,index)=>{
-        let btn=document.createElement("button");
-        btn.className="answer";
-        btn.textContent=ans;
-        btn.onclick=()=>checkAnswer(index);
-        answersDiv.appendChild(btn);
-    });
+let choices = shuffle([...q.answers]);
+
+let html="";
+
+choices.forEach(choice=>{
+
+html += `
+<button onclick="checkAnswer('${choice}')">
+${choice}
+</button>
+`;
+
+});
+
+document.getElementById("answers").innerHTML =
+html;
+
 }
 
-function checkAnswer(choice){
+function checkAnswer(answer){
 
-    if(choice===currentQuestions[current].c){
-        score++;
-    }
-
-    current++;
-
-    if(current<currentQuestions.length){
-        showQuestion();
-    }else{
-        finishGame();
-    }
+if(answer===currentQuestions[current].correct){
+score++;
 }
 
-function finishGame(){
-    document.getElementById("quiz").classList.add("hidden");
-    document.getElementById("result").classList.remove("hidden");
+current++;
 
-    document.getElementById("scoreText").textContent =
-        `คุณได้ ${score} / ${currentQuestions.length} คะแนน`;
+if(current<10){
+showQuestion();
+}
+else{
+
+document.getElementById("question").innerHTML=
+`🎉 จบเกม<br><br>ได้คะแนน ${score}/10`;
+
+document.getElementById("answers").innerHTML=
+`
+<button onclick="location.reload()">
+เล่นใหม่
+</button>
+`;
+
+document.getElementById("progress").innerHTML="";
+document.getElementById("score").innerHTML="";
+
 }
 
-function restart(){
-    document.getElementById("result").classList.add("hidden");
-    document.getElementById("menu").classList.remove("hidden");
 }
+
 </script>
 
 </body>
