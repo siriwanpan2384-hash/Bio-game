@@ -1,373 +1,394 @@
 <!DOCTYPE html>
-
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Biology Quiz Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 Biology Quiz Game</title>
 
 <style>
-body{
-    font-family:Tahoma,sans-serif;
-    background:#e8f5e9;
-    margin:0;
-    padding:20px;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
 }
 
-.container{
-    max-width:800px;
-    margin:auto;
-    background:#fff;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(0,0,0,.15);
+body{
+background:linear-gradient(135deg,#6c63ff,#4caf50);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.card{
+background:white;
+width:100%;
+max-width:700px;
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 
 h1{
-    text-align:center;
-    color:#2e7d32;
-}
-
-label{
-    font-weight:bold;
+text-align:center;
+color:#6c63ff;
+margin-bottom:20px;
 }
 
 select,button{
-    width:100%;
-    padding:12px;
-    margin-top:8px;
-    margin-bottom:15px;
-    border-radius:8px;
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
 }
 
 button{
-    border:none;
-    background:#43a047;
-    color:white;
-    cursor:pointer;
+background:#6c63ff;
+color:white;
+border:none;
+cursor:pointer;
 }
 
 button:hover{
-    background:#2e7d32;
+background:#574bdb;
 }
 
-.answer{
-    margin-top:10px;
+.option{
+background:#f5f5f5;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+cursor:pointer;
 }
 
-.info{
-    font-weight:bold;
-    margin-bottom:10px;
+.option:hover{
+background:#dfe6ff;
 }
 
-#question{
-    font-size:22px;
-    margin:20px 0;
+.correct{
+background:#b8ffb8 !important;
+}
+
+.wrong{
+background:#ffb8b8 !important;
+}
+
+.hidden{
+display:none;
+}
+
+#progress{
+margin-bottom:15px;
+font-weight:bold;
+}
+
+#score{
+font-size:22px;
+text-align:center;
+color:#4caf50;
+margin-top:20px;
 }
 </style>
-
 </head>
 <body>
 
-<div class="container">
+<div class="card">
 
-<h1>🧬 เกมชีววิทยา</h1>
+<div id="lobby">
 
-<div id="menu">
+<h1>🧬 Biology Quiz</h1>
 
-<label>เลือกระดับ</label> <select id="level">
+<label>หมวดหมู่</label>
+<select id="category">
+<option value="reproduction">การสืบพันธุ์ของพืชดอก</option>
+<option value="growth">โครงสร้างและการเจริญเติบโตของพืชดอก</option>
+<option value="genetics">โครโมโซมและสารพันธุกรรม</option>
+<option value="inheritance">การถ่ายทอดลักษณะทางพันธุกรรม</option>
+</select>
 
+<label>ระดับ</label>
+<select id="difficulty">
 <option value="easy">ง่าย</option>
 <option value="medium">ปานกลาง</option>
 <option value="hard">ยาก</option>
-<option value="veryhard">ยากมาก</option>
+<option value="expert">ยากมาก</option>
 </select>
 
-<label>เลือกหมวดหมู่</label> <select id="category">
-
-<option value="flower">1. การสืบพันธุ์ของพืชดอก</option>
-<option value="growth">2. โครงสร้างและการเจริญเติบโตของพืชดอก</option>
-<option value="chromosome">3. โครโมโซมและสารพันธุกรรม</option>
-<option value="genetic">4. การถ่ายทอดลักษณะทางพันธุกรรม</option>
-</select>
-
-<button onclick="startGame()">
+<button onclick="startQuiz()">
 เริ่มเกม
 </button>
 
 </div>
 
-<div id="game" style="display:none">
+<div id="quiz" class="hidden">
 
-<div class="info" id="score"></div>
-<div class="info" id="progress"></div>
+<div id="progress"></div>
 
-<div id="question"></div>
+<h2 id="question"></h2>
 
 <div id="answers"></div>
 
+<p id="feedback"></p>
+
+<button id="nextBtn"
+class="hidden"
+onclick="nextQuestion()">
+ข้อถัดไป
+</button>
+
+</div>
+
+<div id="result" class="hidden">
+<h1>🎉 จบเกม</h1>
+<div id="score"></div>
+<button onclick="location.reload()">
+เล่นใหม่
+</button>
 </div>
 
 </div>
 
 <script>
 
-/* ========= ฐานข้อมูลคำถาม ========= */
+const quizData = {
 
-const questions = [
+reproduction:{
+easy:[
+{
+q:"ส่วนใดสร้างละอองเรณู",
+a:["เกสรตัวผู้","รังไข่","กลีบดอก","ออวุล"],
+correct:0
+},
+{
+q:"การผสมเกสรคืออะไร",
+a:["ถ่ายละอองเรณู","สร้างเมล็ด","สร้างผล","งอก"],
+correct:0
+}
+]
+},
 
+growth:{
+easy:[
 {
-category:"flower",
-level:"easy",
-question:"เกสรตัวผู้สร้างอะไร",
-answers:["ละอองเรณู","เมล็ด","ผล","ออวุล"],
-correct:"ละอองเรณู"
+q:"รากมีหน้าที่อะไร",
+a:["ดูดน้ำ","สังเคราะห์แสง","สร้างเมล็ด","สร้างดอก"],
+correct:0
 },
 {
-category:"flower",
-level:"easy",
-question:"ส่วนใดเป็นอวัยวะสืบพันธุ์ของพืชดอก",
-answers:["ดอก","ใบ","ราก","ลำต้น"],
-correct:"ดอก"
+q:"ใบมีหน้าที่หลักคือ",
+a:["สังเคราะห์แสง","ดูดน้ำ","สร้างราก","สร้างผล"],
+correct:0
+}
+]
 },
+
+genetics:{
+easy:[
 {
-category:"flower",
-level:"medium",
-question:"การถ่ายละอองเรณูเรียกว่า",
-answers:["Pollination","Mitosis","Mutation","Growth"],
-correct:"Pollination"
-},
-{
-category:"growth",
-level:"easy",
-question:"รากทำหน้าที่อะไร",
-answers:["ดูดน้ำ","สร้างเมล็ด","สืบพันธุ์","สร้างดอก"],
-correct:"ดูดน้ำ"
-},
-{
-category:"growth",
-level:"medium",
-question:"ไซเล็มทำหน้าที่",
-answers:["ลำเลียงน้ำ","ลำเลียงอาหาร","เก็บอาหาร","สังเคราะห์โปรตีน"],
-correct:"ลำเลียงน้ำ"
-},
-{
-category:"growth",
-level:"hard",
-question:"ฮอร์โมนที่กระตุ้นการยืดตัวของเซลล์",
-answers:["Auxin","ABA","Ethylene","GA ต่ำ"],
-correct:"Auxin"
-},
-{
-category:"chromosome",
-level:"easy",
-question:"DNA อยู่ในส่วนใดของเซลล์",
-answers:["นิวเคลียส","ไรโบโซม","กอลจิ","แวคิวโอล"],
-correct:"นิวเคลียส"
-},
-{
-category:"chromosome",
-level:"medium",
-question:"DNA ย่อมาจากอะไร",
-answers:[
+q:"DNA ย่อมาจากอะไร",
+a:[
 "Deoxyribonucleic Acid",
-"Double Acid",
-"Dynamic Acid",
-"Dual RNA"
+"Ribonucleic Acid",
+"ATP",
+"Protein"
 ],
-correct:"Deoxyribonucleic Acid"
+correct:0
 },
 {
-category:"chromosome",
-level:"hard",
-question:"มนุษย์มีโครโมโซมกี่คู่",
-answers:["23","22","24","46"],
-correct:"23"
-},
-{
-category:"chromosome",
-level:"veryhard",
-question:"DNA จำลองตัวในระยะใด",
-answers:["Interphase","Prophase","Metaphase","Anaphase"],
-correct:"Interphase"
-},
-{
-category:"genetic",
-level:"easy",
-question:"เมนเดลศึกษาพืชชนิดใด",
-answers:["ถั่วลันเตา","ข้าว","ข้าวโพด","ถั่วเหลือง"],
-correct:"ถั่วลันเตา"
-},
-{
-category:"genetic",
-level:"medium",
-question:"TT เรียกว่า",
-answers:[
-"Homozygous",
-"Heterozygous",
-"Phenotype",
-"Allele"
+q:"โครโมโซมอยู่ในส่วนใด",
+a:[
+"นิวเคลียส",
+"ผนังเซลล์",
+"ไซโทพลาซึม",
+"เยื่อหุ้มเซลล์"
 ],
-correct:"Homozygous"
+correct:0
+}
+]
 },
+
+inheritance:{
+easy:[
 {
-category:"genetic",
-level:"hard",
-question:"Tt × Tt ได้ tt เท่าใด",
-answers:["25%","50%","75%","100%"],
-correct:"25%"
-},
-{
-category:"genetic",
-level:"veryhard",
-question:"กฎการแยกตัวของยีนเสนอโดยใคร",
-answers:[
-"Mendel",
-"Darwin",
-"Watson",
-"Crick"
+q:"เมนเดลศึกษาพืชชนิดใด",
+a:[
+"ถั่วลันเตา",
+"ข้าว",
+"ข้าวโพด",
+"อ้อย"
 ],
-correct:"Mendel"
+correct:0
+},
+{
+q:"ลักษณะเด่นคือ",
+a:[
+"แสดงออกได้",
+"หายไป",
+"ไม่ถ่ายทอด",
+"กลายพันธุ์"
+],
+correct:0
+}
+]
 }
 
-];
+};
 
-/* =============================== */
+let currentQuiz=[];
+let currentIndex=0;
+let score=0;
 
-let quiz = [];
-let current = 0;
-let score = 0;
-
-function shuffle(array){
-
-for(let i=array.length-1;i>0;i--){
-
-let j=Math.floor(Math.random()*(i+1));
-
-[array[i],array[j]]=[array[j],array[i]];
-
-}
-
-return array;
-}
-
-function startGame(){
-
-const level =
-document.getElementById("level").value;
+function startQuiz(){
 
 const category =
 document.getElementById("category").value;
 
-let pool =
-questions.filter(q =>
-q.level===level &&
-q.category===category
-);
+const difficulty =
+document.getElementById("difficulty").value;
 
-if(pool.length===0){
-
+if(
+!quizData[category] ||
+!quizData[category][difficulty]
+){
 alert("ยังไม่มีคำถามระดับนี้");
-
 return;
 }
 
-quiz = shuffle([...pool]);
+currentQuiz =
+quizData[category][difficulty];
 
-if(quiz.length > 10){
-quiz = quiz.slice(0,10);
-}
+currentIndex=0;
+score=0;
 
-current = 0;
-score = 0;
+document.getElementById("lobby")
+.classList.add("hidden");
 
-document.getElementById("menu").style.display="none";
-document.getElementById("game").style.display="block";
+document.getElementById("quiz")
+.classList.remove("hidden");
 
 showQuestion();
+
 }
 
 function showQuestion(){
 
-const q = quiz[current];
+let q =
+currentQuiz[currentIndex];
 
-document.getElementById("score").innerHTML =
-"คะแนน : " + score;
+document.getElementById("progress")
+.innerHTML=
+`ข้อ ${currentIndex+1}
+จาก ${currentQuiz.length}`;
 
-document.getElementById("progress").innerHTML =
-"ข้อ " + (current+1) + " / " + quiz.length;
+document.getElementById("question")
+.innerHTML=q.q;
 
-document.getElementById("question").innerHTML =
-q.question;
+document.getElementById("feedback")
+.innerHTML="";
 
-let answers =
-shuffle([...q.answers]);
+document.getElementById("nextBtn")
+.classList.add("hidden");
 
-let html = "";
+let answers=
+document.getElementById("answers");
 
-answers.forEach(ans=>{
+answers.innerHTML="";
 
-html += `
-<button class="answer"
-onclick="checkAnswer('${ans}')">
-${ans}
-</button>
-`;
+q.a.forEach((choice,index)=>{
+
+let div=
+document.createElement("div");
+
+div.className="option";
+
+div.innerHTML=choice;
+
+div.onclick=
+()=>checkAnswer(index);
+
+answers.appendChild(div);
 
 });
 
-document.getElementById("answers").innerHTML =
-html;
 }
 
-function checkAnswer(answer){
+function checkAnswer(index){
 
-if(answer===quiz[current].correct){
+let q=currentQuiz[currentIndex];
+
+let options=
+document.querySelectorAll(".option");
+
+options.forEach(op=>{
+op.style.pointerEvents="none";
+});
+
+if(index===q.correct){
+
+options[index]
+.classList.add("correct");
+
 score++;
+
+document.getElementById("feedback")
+.innerHTML=
+"✅ ถูกต้อง";
+
+}else{
+
+options[index]
+.classList.add("wrong");
+
+options[q.correct]
+.classList.add("correct");
+
+document.getElementById("feedback")
+.innerHTML=
+"❌ คำตอบที่ถูกคือ : "
++ q.a[q.correct];
+
 }
 
-current++;
+document.getElementById("nextBtn")
+.classList.remove("hidden");
 
-if(current < quiz.length){
+}
+
+function nextQuestion(){
+
+currentIndex++;
+
+if(currentIndex<currentQuiz.length){
+
 showQuestion();
-}
-else{
-finishGame();
-}
+
+}else{
+
+finishQuiz();
 
 }
 
-function finishGame(){
-
-let percent =
-Math.round(score/quiz.length*100);
-
-document.getElementById("question").innerHTML =
-
-`
-<h2>🎉 จบเกม</h2>
-<p>คะแนน ${score}/${quiz.length}</p>
-<p>${percent}%</p>
-`;
-
-document.getElementById("answers").innerHTML =
-
-`
-<button onclick="restartGame()">
-🔄 เล่นใหม่
-</button>
-`;
-
-document.getElementById("score").innerHTML="";
-document.getElementById("progress").innerHTML="";
 }
 
-function restartGame(){
+function finishQuiz(){
 
-document.getElementById("menu").style.display="block";
-document.getElementById("game").style.display="none";
+document.getElementById("quiz")
+.classList.add("hidden");
+
+document.getElementById("result")
+.classList.remove("hidden");
+
+document.getElementById("score")
+.innerHTML=
+`คะแนน ${score}
+จาก ${currentQuiz.length}`;
 
 }
+
 </script>
 
 </body>
