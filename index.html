@@ -1,76 +1,5 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เกมชีววิทยา Quiz</title>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #4CAF50, #81C784);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-
-    .game-box {
-        background: white;
-        padding: 25px;
-        border-radius: 15px;
-        width: 400px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        text-align: center;
-    }
-
-    h1 {
-        color: #2E7D32;
-    }
-
-    .question {
-        font-size: 20px;
-        margin: 20px 0;
-    }
-
-    button {
-        width: 100%;
-        margin: 8px 0;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        background: #4CAF50;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #388E3C;
-    }
-
-    #result {
-        margin-top: 15px;
-        font-weight: bold;
-        font-size: 18px;
-    }
-</style>
-</head>
-<body>
-
-<div class="game-box">
-    <h1>🧬 เกมชีววิทยา</h1>
-
-    <div id="question" class="question"></div>
-
-    <div id="answers"></div>
-
-    <div id="result"></div>
-</div>
-
 <script>
-const questions = [
+const allQuestions = [
 {
     question: "หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?",
     answers: ["เซลล์", "เนื้อเยื่อ", "อวัยวะ", "DNA"],
@@ -90,16 +19,90 @@ const questions = [
         "Digital Network Array"
     ],
     correct: 0
+},
+{
+    question: "สัตว์เลี้ยงลูกด้วยนมมีลักษณะเด่นคืออะไร?",
+    answers: ["มีเกล็ด", "มีขนและต่อมน้ำนม", "มีเหงือก", "มีเปลือกแข็ง"],
+    correct: 1
+},
+{
+    question: "อวัยวะใดสูบฉีดเลือด?",
+    answers: ["ปอด", "หัวใจ", "ตับ", "ไต"],
+    correct: 1
+},
+{
+    question: "เม็ดเลือดแดงทำหน้าที่อะไร?",
+    answers: ["สร้างฮอร์โมน", "ลำเลียงออกซิเจน", "ย่อยอาหาร", "สร้างภูมิคุ้มกัน"],
+    correct: 1
+},
+{
+    question: "พืชดูดน้ำผ่านส่วนใด?",
+    answers: ["ใบ", "ลำต้น", "ราก", "ดอก"],
+    correct: 2
+},
+{
+    question: "หน่วยพันธุกรรมเรียกว่าอะไร?",
+    answers: ["ยีน", "โปรตีน", "ฮอร์โมน", "เอนไซม์"],
+    correct: 0
+},
+{
+    question: "สิ่งมีชีวิตใดเป็นผู้ผลิต?",
+    answers: ["เห็ด", "สาหร่าย", "เสือ", "มนุษย์"],
+    correct: 1
+},
+{
+    question: "กระดูกมนุษย์ผู้ใหญ่มีประมาณกี่ชิ้น?",
+    answers: ["106", "206", "306", "406"],
+    correct: 1
+},
+{
+    question: "ส่วนใดของเซลล์ควบคุมการทำงาน?",
+    answers: ["นิวเคลียส", "เยื่อหุ้มเซลล์", "ไซโทพลาซึม", "ไรโบโซม"],
+    correct: 0
+},
+{
+    question: "วิตามินที่ช่วยป้องกันโรคลักปิดลักเปิดคือ?",
+    answers: ["A", "B", "C", "D"],
+    correct: 2
+},
+{
+    question: "การแบ่งเซลล์เพื่อเจริญเติบโตเรียกว่า?",
+    answers: ["ไมโอซิส", "ไมโทซิส", "ฟิชชัน", "บัดดิ้ง"],
+    correct: 1
+},
+{
+    question: "สัตว์ชนิดใดมีกระดูกสันหลัง?",
+    answers: ["แมงมุม", "ปลาดาว", "งู", "แมงกะพรุน"],
+    correct: 2
+},
+{
+    question: "ปอดทำหน้าที่อะไร?",
+    answers: ["สูบฉีดเลือด", "แลกเปลี่ยนแก๊ส", "สร้างเม็ดเลือด", "ย่อยอาหาร"],
+    correct: 1
 }
 ];
 
+let questions = [];
 let current = 0;
 let score = 0;
+
+function startGame() {
+    questions = [...allQuestions]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10);
+
+    current = 0;
+    score = 0;
+
+    document.getElementById("result").innerHTML = "";
+    loadQuestion();
+}
 
 function loadQuestion() {
     const q = questions[current];
 
-    document.getElementById("question").textContent = q.question;
+    document.getElementById("question").innerHTML =
+        `ข้อ ${current + 1}/10<br>${q.question}`;
 
     const answersDiv = document.getElementById("answers");
     answersDiv.innerHTML = "";
@@ -119,23 +122,17 @@ function checkAnswer(selected) {
 
     current++;
 
-    if (current < questions.length) {
+    if (current < 10) {
         loadQuestion();
     } else {
-        showResult();
+        document.getElementById("question").innerHTML = "🎉 จบเกม";
+        document.getElementById("answers").innerHTML =
+            `<button onclick="startGame()">🔄 เล่นใหม่</button>`;
+
+        document.getElementById("result").innerHTML =
+            `คะแนน ${score}/10`;
     }
 }
 
-function showResult() {
-    document.getElementById("question").textContent = "จบเกม!";
-    document.getElementById("answers").innerHTML = "";
-
-    document.getElementById("result").innerHTML =
-        `คุณได้ ${score} / ${questions.length} คะแนน 🏆`;
-}
-
-loadQuestion();
+window.onload = startGame;
 </script>
-
-</body>
-</html>
