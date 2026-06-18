@@ -1,138 +1,360 @@
-<script>
-const allQuestions = [
-{
-    question: "หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?",
-    answers: ["เซลล์", "เนื้อเยื่อ", "อวัยวะ", "DNA"],
-    correct: 0
-},
-{
-    question: "พืชสร้างอาหารด้วยกระบวนการใด?",
-    answers: ["การหายใจ", "การย่อยอาหาร", "การสังเคราะห์แสง", "การสืบพันธุ์"],
-    correct: 2
-},
-{
-    question: "DNA ย่อมาจากอะไร?",
-    answers: [
-        "Deoxyribonucleic Acid",
-        "Dynamic Nucleus Acid",
-        "Double Nature Acid",
-        "Digital Network Array"
-    ],
-    correct: 0
-},
-{
-    question: "สัตว์เลี้ยงลูกด้วยนมมีลักษณะเด่นคืออะไร?",
-    answers: ["มีเกล็ด", "มีขนและต่อมน้ำนม", "มีเหงือก", "มีเปลือกแข็ง"],
-    correct: 1
-},
-{
-    question: "อวัยวะใดสูบฉีดเลือด?",
-    answers: ["ปอด", "หัวใจ", "ตับ", "ไต"],
-    correct: 1
-},
-{
-    question: "เม็ดเลือดแดงทำหน้าที่อะไร?",
-    answers: ["สร้างฮอร์โมน", "ลำเลียงออกซิเจน", "ย่อยอาหาร", "สร้างภูมิคุ้มกัน"],
-    correct: 1
-},
-{
-    question: "พืชดูดน้ำผ่านส่วนใด?",
-    answers: ["ใบ", "ลำต้น", "ราก", "ดอก"],
-    correct: 2
-},
-{
-    question: "หน่วยพันธุกรรมเรียกว่าอะไร?",
-    answers: ["ยีน", "โปรตีน", "ฮอร์โมน", "เอนไซม์"],
-    correct: 0
-},
-{
-    question: "สิ่งมีชีวิตใดเป็นผู้ผลิต?",
-    answers: ["เห็ด", "สาหร่าย", "เสือ", "มนุษย์"],
-    correct: 1
-},
-{
-    question: "กระดูกมนุษย์ผู้ใหญ่มีประมาณกี่ชิ้น?",
-    answers: ["106", "206", "306", "406"],
-    correct: 1
-},
-{
-    question: "ส่วนใดของเซลล์ควบคุมการทำงาน?",
-    answers: ["นิวเคลียส", "เยื่อหุ้มเซลล์", "ไซโทพลาซึม", "ไรโบโซม"],
-    correct: 0
-},
-{
-    question: "วิตามินที่ช่วยป้องกันโรคลักปิดลักเปิดคือ?",
-    answers: ["A", "B", "C", "D"],
-    correct: 2
-},
-{
-    question: "การแบ่งเซลล์เพื่อเจริญเติบโตเรียกว่า?",
-    answers: ["ไมโอซิส", "ไมโทซิส", "ฟิชชัน", "บัดดิ้ง"],
-    correct: 1
-},
-{
-    question: "สัตว์ชนิดใดมีกระดูกสันหลัง?",
-    answers: ["แมงมุม", "ปลาดาว", "งู", "แมงกะพรุน"],
-    correct: 2
-},
-{
-    question: "ปอดทำหน้าที่อะไร?",
-    answers: ["สูบฉีดเลือด", "แลกเปลี่ยนแก๊ส", "สร้างเม็ดเลือด", "ย่อยอาหาร"],
-    correct: 1
-}
-];
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมชีววิทยา 3 ระดับ</title>
 
-let questions = [];
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#4caf50,#81c784);
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:90%;
+    max-width:700px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.2);
+}
+
+h1{
+    text-align:center;
+    color:#2e7d32;
+}
+
+.level{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.level button{
+    margin:5px;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#4caf50;
+    color:white;
+    font-size:16px;
+}
+
+button:hover{
+    background:#388e3c;
+}
+
+.answer-btn{
+    display:block;
+    width:100%;
+    margin-top:10px;
+}
+
+#question{
+    font-size:20px;
+    margin:15px 0;
+}
+
+#score{
+    font-weight:bold;
+    color:#1565c0;
+}
+
+#result{
+    margin-top:15px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🧬 เกมชีววิทยา</h1>
+
+<div id="menu" class="level">
+    <h3>เลือกระดับ</h3>
+
+    <button onclick="startGame('easy')">ง่าย</button>
+    <button onclick="startGame('hard')">ยาก</button>
+    <button onclick="startGame('veryhard')">ยากมาก</button>
+</div>
+
+<div id="game" style="display:none;">
+    <div id="score">คะแนน: 0</div>
+    <div id="progress"></div>
+    <div id="question"></div>
+    <div id="answers"></div>
+    <div id="result"></div>
+</div>
+
+</div>
+
+<script>
+
+const questions = {
+
+easy:[
+{
+q:"หน่วยพื้นฐานของสิ่งมีชีวิตคืออะไร?",
+a:["เซลล์","เนื้อเยื่อ","อวัยวะ","DNA"],
+c:0
+},
+{
+q:"พืชสร้างอาหารด้วยกระบวนการใด?",
+a:["หายใจ","สังเคราะห์แสง","ย่อยอาหาร","คายน้ำ"],
+c:1
+},
+{
+q:"อวัยวะใดสูบฉีดเลือด?",
+a:["ปอด","ไต","หัวใจ","ตับ"],
+c:2
+},
+{
+q:"เลือดมีสีแดงเพราะสารใด?",
+a:["ฮีโมโกลบิน","คลอโรฟิลล์","แป้ง","อินซูลิน"],
+c:0
+},
+{
+q:"มนุษย์มีประสาทสัมผัสหลักกี่อย่าง?",
+a:["3","4","5","6"],
+c:2
+},
+{
+q:"สัตว์ชนิดใดเป็นสัตว์เลี้ยงลูกด้วยนม?",
+a:["กบ","ปลา","วาฬ","จระเข้"],
+c:2
+},
+{
+q:"กระดูกช่วยทำหน้าที่อะไร?",
+a:["ย่อยอาหาร","ค้ำจุนร่างกาย","หายใจ","มองเห็น"],
+c:1
+},
+{
+q:"ส่วนใดของพืชดูดน้ำ?",
+a:["ใบ","ดอก","ราก","ผล"],
+c:2
+},
+{
+q:"มนุษย์หายใจด้วยอวัยวะใด?",
+a:["หัวใจ","ปอด","ตับ","ไต"],
+c:1
+},
+{
+q:"สิ่งมีชีวิตต้องการอะไรเพื่อดำรงชีวิต?",
+a:["อากาศ","น้ำ","อาหาร","ถูกทุกข้อ"],
+c:3
+}
+],
+
+hard:[
+{
+q:"ออร์แกเนลล์ใดสร้างพลังงาน ATP?",
+a:["นิวเคลียส","ไรโบโซม","ไมโทคอนเดรีย","ไลโซโซม"],
+c:2
+},
+{
+q:"DNA อยู่ในส่วนใดของเซลล์?",
+a:["เยื่อหุ้มเซลล์","นิวเคลียส","ไซโทพลาซึม","ไรโบโซม"],
+c:1
+},
+{
+q:"เม็ดเลือดขาวมีหน้าที่ใด?",
+a:["ลำเลียงออกซิเจน","แข็งตัวเลือด","ป้องกันเชื้อโรค","เก็บไขมัน"],
+c:2
+},
+{
+q:"พืชใช้ก๊าซใดในการสังเคราะห์แสง?",
+a:["ออกซิเจน","คาร์บอนไดออกไซด์","ไนโตรเจน","ฮีเลียม"],
+c:1
+},
+{
+q:"มนุษย์มีโครโมโซมกี่คู่?",
+a:["21","22","23","24"],
+c:2
+},
+{
+q:"ไรโบโซมทำหน้าที่อะไร?",
+a:["สร้างโปรตีน","สร้างพลังงาน","เก็บ DNA","กำจัดของเสีย"],
+c:0
+},
+{
+q:"กระบวนการแบ่งเซลล์ร่างกายเรียกว่า?",
+a:["ไมโอซิส","ไมโทซิส","การปฏิสนธิ","การกลายพันธุ์"],
+c:1
+},
+{
+q:"สารสีเขียวในพืชคืออะไร?",
+a:["ฮีโมโกลบิน","คลอโรฟิลล์","เมลานิน","เคราติน"],
+c:1
+},
+{
+q:"ตับมีหน้าที่สำคัญข้อใด?",
+a:["สร้างน้ำดี","สูบฉีดเลือด","หายใจ","รับภาพ"],
+c:0
+},
+{
+q:"ระบบใดควบคุมการทำงานของร่างกาย?",
+a:["ย่อยอาหาร","ประสาท","หายใจ","ขับถ่าย"],
+c:1
+}
+],
+
+veryhard:[
+{
+q:"รหัสพันธุกรรม 1 โคดอนประกอบด้วยนิวคลีโอไทด์กี่ตัว?",
+a:["2","3","4","5"],
+c:1
+},
+{
+q:"กระบวนการสร้าง RNA จาก DNA เรียกว่า?",
+a:["Translation","Replication","Transcription","Mutation"],
+c:2
+},
+{
+q:"ข้อใดเป็นผลิตภัณฑ์หลักของ Calvin Cycle?",
+a:["ATP","กลูโคส","NADH","ออกซิเจน"],
+c:1
+},
+{
+q:"เซลล์ใดไม่มีนิวเคลียสเมื่อโตเต็มที่?",
+a:["เม็ดเลือดแดง","เซลล์ตับ","เซลล์ประสาท","เซลล์กล้ามเนื้อ"],
+c:0
+},
+{
+q:"Crossing Over เกิดในระยะใดของไมโอซิส?",
+a:["Prophase I","Metaphase I","Anaphase I","Telophase I"],
+c:0
+},
+{
+q:"เอนไซม์ใดใช้เชื่อมสาย DNA?",
+a:["Helicase","Ligase","Polymerase","Primase"],
+c:1
+},
+{
+q:"ข้อใดเป็นผู้ค้นพบโครงสร้าง DNA แบบเกลียวคู่?",
+a:["Mendel","Darwin","Watson และ Crick","Pasteur"],
+c:2
+},
+{
+q:"การลำเลียงสารจากเข้มข้นต่ำไปสูงต้องใช้พลังงานเรียกว่า?",
+a:["Diffusion","Osmosis","Active Transport","Facilitated Diffusion"],
+c:2
+},
+{
+q:"ข้อใดเป็นลักษณะของ Prokaryote?",
+a:["มีนิวเคลียส","ไม่มีนิวเคลียส","มีไมโทคอนเดรีย","มีกอลจิบอดี"],
+c:1
+},
+{
+q:"วงจร Krebs เกิดในส่วนใดของเซลล์?",
+a:["นิวเคลียส","ไซโทพลาซึม","ไมโทคอนเดรีย","ไรโบโซม"],
+c:2
+}
+]
+};
+
+let currentQuestions = [];
 let current = 0;
 let score = 0;
 
-function startGame() {
-    questions = [...allQuestions]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 10);
+function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+        let j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+    }
+    return array;
+}
 
+function startGame(level){
+
+    currentQuestions = shuffle([...questions[level]]);
     current = 0;
     score = 0;
 
-    document.getElementById("result").innerHTML = "";
-    loadQuestion();
+    document.getElementById("menu").style.display="none";
+    document.getElementById("game").style.display="block";
+
+    showQuestion();
 }
 
-function loadQuestion() {
-    const q = questions[current];
+function showQuestion(){
+
+    let q = currentQuestions[current];
+
+    document.getElementById("score").innerHTML =
+        "คะแนน: " + score;
+
+    document.getElementById("progress").innerHTML =
+        "ข้อ " + (current+1) + " / 10";
 
     document.getElementById("question").innerHTML =
-        `ข้อ ${current + 1}/10<br>${q.question}`;
+        q.q;
 
-    const answersDiv = document.getElementById("answers");
-    answersDiv.innerHTML = "";
+    let html = "";
 
-    q.answers.forEach((answer, index) => {
-        const btn = document.createElement("button");
-        btn.textContent = answer;
-        btn.onclick = () => checkAnswer(index);
-        answersDiv.appendChild(btn);
+    q.a.forEach((choice,index)=>{
+        html += `
+        <button class="answer-btn"
+        onclick="checkAnswer(${index})">
+        ${choice}
+        </button>`;
     });
+
+    document.getElementById("answers").innerHTML = html;
 }
 
-function checkAnswer(selected) {
-    if (selected === questions[current].correct) {
+function checkAnswer(choice){
+
+    let q = currentQuestions[current];
+
+    if(choice === q.c){
         score++;
+        document.getElementById("result").innerHTML =
+        "✅ ถูกต้อง";
+    }else{
+        document.getElementById("result").innerHTML =
+        "❌ ไม่ถูกต้อง";
     }
 
     current++;
 
-    if (current < 10) {
-        loadQuestion();
-    } else {
-        document.getElementById("question").innerHTML = "🎉 จบเกม";
-        document.getElementById("answers").innerHTML =
-            `<button onclick="startGame()">🔄 เล่นใหม่</button>`;
+    setTimeout(()=>{
 
-        document.getElementById("result").innerHTML =
-            `คะแนน ${score}/10`;
-    }
+        document.getElementById("result").innerHTML="";
+
+        if(current < currentQuestions.length){
+            showQuestion();
+        }else{
+            finishGame();
+        }
+
+    },1000);
 }
 
-window.onload = startGame;
+function finishGame(){
+
+    document.getElementById("question").innerHTML =
+    `🎉 จบเกม<br><br>คะแนนของคุณ ${score}/10`;
+
+    document.getElementById("answers").innerHTML = `
+    <button onclick="location.reload()">
+        เล่นใหม่
+    </button>`;
+
+    document.getElementById("progress").innerHTML="";
+}
+
 </script>
+
+</body>
+</html>
